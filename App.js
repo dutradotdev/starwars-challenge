@@ -1,12 +1,7 @@
 import React from 'react'
-import Home from './src/screens/home'
+import 'react-native-gesture-handler'
+import Router from './src/router'
 
-const App = () => {
-  return (
-    <>
-      <Home />
-    </>
-  )
-}
+const App = () => <Router />
 
 export default App
