@@ -9,7 +9,6 @@ const useGetPeopleWithPagination = () => {
   const [currentPage, setCurrentPage] = useState(1)
   const [hasNextPage, setHasNextPage] = useState(true)
   const [hasPreviousPage, setHasPreviousPage] = useState(false)
-  const charactersToShow = 5
 
   useEffect(() => {
     getPeople()
@@ -18,7 +17,7 @@ const useGetPeopleWithPagination = () => {
   const getPeople = async () => {
     try {
       setLoading(true)
-      console.log({ currentPage })
+
       const { data } = await axios.get(`http://swapi.dev/api/people/?page=${currentPage}`)
       setHasNextPage(!!data?.next)
       setHasPreviousPage(!!data?.previous)
