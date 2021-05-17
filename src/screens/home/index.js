@@ -34,21 +34,19 @@ const Home = () => {
   ] = useGetHomeWorlds()
 
   useEffect(() => {
-    getPeople()
-  }, [])
-
-  useEffect(() => {
     getHomeWorlds(peopleData)
   }, [peopleData])
+
+  const handleOnPress = (item) => {
+    navigation.navigate('CharacterDetail', {
+      item,
+    })
+  }
 
   const ListItem = ({ item }) => (
     <TouchableOpacity
       key={item?.name}
-      onPress={() =>
-        navigation.navigate('CharacterDetail', {
-          item,
-        })
-      }
+      onPress={() => handleOnPress(item)}
       style={styles.cardContainer}>
       <View style={styles.avatarContainer}>
         <StarWarsAvatar
@@ -70,18 +68,22 @@ const Home = () => {
   )
 
   const PaginationButtons = () => (
-    <View style={styles.paginationContainer}>
-      <View style={styles.paginationButtonContainer}>
-        <Button
-          disabled={!hasPreviousPage}
-          onPress={previousPage}
-          title='Previous'
-          buttonStyle={{ marginRight: 20 }}
-        />
-        <Button disabled={!hasNextPage} onPress={nextPage} title='Next' />
-      </View>
-      <Text style={styles.title}>Page: {currentPage}</Text>
-    </View>
+    <>
+      {!peopleError && !homeWorldsError && (
+        <View style={styles.paginationContainer}>
+          <View style={styles.paginationButtonContainer}>
+            <Button
+              disabled={!hasPreviousPage}
+              onPress={previousPage}
+              title='Previous'
+              buttonStyle={styles.buttonRight}
+            />
+            <Button disabled={!hasNextPage} onPress={nextPage} title='Next' />
+          </View>
+          <Text style={styles.title}>Page: {currentPage}</Text>
+        </View>
+      )}
+    </>
   )
 
   const renderItem = ({ item }) => <ListItem item={item} />
@@ -109,7 +111,9 @@ const Home = () => {
         <ActivityIndicator animating color='#AD7D37' size='large' />
       )}
       {(peopleError || homeWorldsError) && <Error refetch={getPeople} />}
-      {!homeWorldsLoading && !peopleLoading && CharacterList()}
+      {!homeWorldsLoading && !peopleLoading && !peopleError && !homeWorldsError && (
+        <CharacterList />
+      )}
     </SafeAreaView>
   )
 }

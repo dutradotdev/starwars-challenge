@@ -55,6 +55,7 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     justifyContent: 'space-between',
   },
+  buttonRight: { marginRight: 20 },
 })
 
 export default styles
