@@ -12,6 +12,8 @@ const StarWarsAvatar = ({ size, hairColor, gender, skinColor }) => {
         return 'Brown'
       case 'auburn':
         return 'Brown'
+      case 'white':
+        return 'White'
       case 'unknown':
       case 'n/a':
       case 'none':

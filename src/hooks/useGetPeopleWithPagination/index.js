@@ -9,7 +9,7 @@ const useGetPeopleWithPagination = () => {
   const [currentPage, setCurrentPage] = useState(1)
   const [hasNextPage, setHasNextPage] = useState(true)
   const [hasPreviousPage, setHasPreviousPage] = useState(false)
-  const charactersToShow = 4
+  const charactersToShow = 5
 
   useEffect(() => {
     getPeople()
@@ -23,8 +23,13 @@ const useGetPeopleWithPagination = () => {
       setHasNextPage(!!data?.next)
       setHasPreviousPage(!!data?.previous)
 
+      /**
+       * TODO: getting the first 5 because the Avatar component has a poor performance (uses webview under the hood)
+       * and star wars api has no limit to when request endpoint people.
+       * Need to manage the difference (which is bad. backend needs to do this)
+       */
       const orderedData = orderByField(
-        data?.results.filter((item, index) => index < charactersToShow),
+        data?.results.filter((_, index) => index < charactersToShow),
         'name'
       )
       setPeople(orderedData)
