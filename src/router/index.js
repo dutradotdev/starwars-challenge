@@ -11,7 +11,13 @@ function Router() {
   return (
     <NavigationContainer>
       <Stack.Navigator>
-        <Stack.Screen name='Home' component={Home} />
+        <Stack.Screen
+          name='Home'
+          component={Home}
+          options={{
+            headerShown: false,
+          }}
+        />
         <Stack.Screen name='CharacterDetail' component={CharacterDetail} />
       </Stack.Navigator>
     </NavigationContainer>
