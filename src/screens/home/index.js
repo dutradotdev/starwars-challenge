@@ -86,19 +86,19 @@ const Home = () => {
 
   const renderItem = ({ item }) => <ListItem item={item} />
   const keyExtractor = (item) => item?.name
-  const getItemLayout = (data, index) => ({ length: 200, offset: 20 * index, index })
+  const getItemLayout = (_, index) => ({ length: 200, offset: 200 * index, index })
 
   const CharacterList = () => (
     <FlatList
-      data={peopleData}
       style={styles.flatListContainer}
-      scrollEnabled={true}
+      data={peopleData}
       showsVerticalScrollIndicator={false}
       keyExtractor={keyExtractor}
       ListFooterComponent={PaginationButtons}
       renderItem={renderItem}
-      removeClippedSubviews
       getItemLayout={getItemLayout}
+      removeClippedSubviews
+      scrollEnabled
       windowSize={200}
     />
   )
