@@ -1,7 +1,7 @@
 import React from 'react'
 import { Avatar } from 'react-native-avataaars'
 
-const StarWarsAvatar = ({ size, hairColor, gender, skinColor, containerStyle }) => {
+const StarWarsAvatar = ({ size, hairColor, gender, skinColor }) => {
   const getHairColor = (hairColor) => {
     switch (hairColor?.split(',')[0]) {
       case 'blond':
