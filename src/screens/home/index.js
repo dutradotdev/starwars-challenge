@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useEffect } from 'react'
 import {
   SafeAreaView,
   View,
@@ -9,53 +9,26 @@ import {
 } from 'react-native'
 import { useNavigation } from '@react-navigation/core'
 
-import axios from 'axios'
 import StarWarsAvatar from '../../components/StarWarsAvatar'
 import Error from '../../components/Error'
-import orderByField from '../../utils/orderByField'
+import useGetPeople from '../../hooks/useGetPeople'
+import useGetHomeWorlds from '../../hooks/useGetHomeWorlds'
+
 import styles from './styles'
 
 const Home = () => {
   const navigation = useNavigation()
-  const [homeworlds, setHomeworlds] = useState({})
-  const [people, setPeople] = useState([])
-  const [loading, setLoading] = useState([])
-  const [error, setError] = useState(false)
-
-  const getPeople = async () => {
-    const { data } = await axios.get('http://swapi.dev/api/people/')
-    const orderedData = orderByField(data?.results, 'name')
-    setPeople(orderedData)
-    return data
-  }
+  const [{ people: peopleData, loading: peopleLoading, error: peopleError }, getPeople] =
+    useGetPeople()
+  const [
+    { homeWorlds: homeWorldsData, loading: homeWorldsLoading, error: homeWorldsError },
+    getHomeWorlds,
+  ] = useGetHomeWorlds()
 
   useEffect(() => {
     const getPeopleAndHomeworlds = async () => {
-      try {
-        setLoading(true)
-        const data = await getPeople()
-        const homeworlds = data.results.map((item) => item.homeworld)
-        const uniqueHomeWorlds = Array.from(new Set(homeworlds))
-        const homeWorldsData = await Promise.all(
-          uniqueHomeWorlds.map(async (endpoint) => {
-            const { data } = await axios.get(endpoint)
-
-            return {
-              [endpoint]: data?.name,
-            }
-          })
-        )
-        const reduced = homeWorldsData.reduce((acc, cur) => {
-          acc[Object.keys(cur)[0]] = Object.values(cur)[0]
-          return acc
-        }, {})
-        setHomeworlds({ ...reduced })
-      } catch (e) {
-        console.log(JSON.stringify(e))
-        setError(true)
-      } finally {
-        setLoading(false)
-      }
+      const data = await getPeople()
+      getHomeWorlds(data?.results)
     }
     getPeopleAndHomeworlds()
   }, [])
@@ -64,7 +37,7 @@ const Home = () => {
     <FlatList
       style={styles.flatListContainer}
       scrollEnabled={true}
-      data={people}
+      data={peopleData}
       keyExtractor={(item) => item?.name}
       showsVerticalScrollIndicator={false}
       renderItem={({ item }) => (
@@ -86,7 +59,7 @@ const Home = () => {
           </View>
           <View style={styles.descriptionContainer}>
             <Text style={styles.title}>Name: {item?.name}</Text>
-            <Text style={styles.subtitle}>Planet: {homeworlds[item?.homeworld]}</Text>
+            <Text style={styles.subtitle}>Planet: {homeWorldsData[item?.homeworld]}</Text>
           </View>
         </TouchableOpacity>
       )}
@@ -95,9 +68,11 @@ const Home = () => {
 
   return (
     <SafeAreaView style={styles.container}>
-      {loading && <ActivityIndicator animating color='#AD7D37' size='large' />}
-      {error && <Error refetch={getPeople} />}
-      {!error && !loading && CharacterList()}
+      {(peopleLoading || homeWorldsLoading) && (
+        <ActivityIndicator animating color='#AD7D37' size='large' />
+      )}
+      {(peopleError || homeWorldsError) && <Error refetch={getPeople} />}
+      {!homeWorldsError && !homeWorldsLoading && !peopleLoading && !peopleError && CharacterList()}
     </SafeAreaView>
   )
 }
