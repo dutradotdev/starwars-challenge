@@ -9,6 +9,7 @@ const styles = StyleSheet.create({
   flatListContainer: {
     flex: 1,
     width: '100%',
+    marginTop: 20,
   },
   cardContainer: {
     flex: 1,
@@ -39,6 +40,17 @@ const styles = StyleSheet.create({
   },
   subtitle: {
     fontSize: 14,
+  },
+  paginationContainer: {
+    flex: 1,
+    alignItems: 'center',
+    flexDirection: 'column',
+  },
+  paginationButtonContainer: {
+    flex: 1,
+    flexDirection: 'row',
+    marginBottom: 20,
+    justifyContent: 'space-between',
   },
 })
 

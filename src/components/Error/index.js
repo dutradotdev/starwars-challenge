@@ -1,15 +1,13 @@
 import React from 'react'
-import { View, Text, TouchableOpacity } from 'react-native'
-
+import { View, Text } from 'react-native'
+import Button from '../Button'
 import styles from './styles'
 
 const Error = ({ refetch = () => {} }) => {
   return (
     <View>
       <Text style={styles.title}>An error has occurred :(</Text>
-      <TouchableOpacity onPress={() => refetch()} style={styles.textContainer}>
-        <Text style={styles.title}>Try again </Text>
-      </TouchableOpacity>
+      <Button onPress={refetch} title='Try again' />
     </View>
   )
 }

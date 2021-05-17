@@ -10,28 +10,77 @@ import {
 import { useNavigation } from '@react-navigation/core'
 
 import StarWarsAvatar from '../../components/StarWarsAvatar'
+import Button from '../../components/Button'
 import Error from '../../components/Error'
-import useGetPeople from '../../hooks/useGetPeople'
+import useGetPeopleWithPagination from '../../hooks/useGetPeopleWithPagination'
 import useGetHomeWorlds from '../../hooks/useGetHomeWorlds'
 
 import styles from './styles'
 
 const Home = () => {
   const navigation = useNavigation()
-  const [{ people: peopleData, loading: peopleLoading, error: peopleError }, getPeople] =
-    useGetPeople()
+  const [
+    { people: peopleData, loading: peopleLoading, error: peopleError },
+    getPeople,
+    nextPage,
+    previousPage,
+    hasNextPage,
+    hasPreviousPage,
+    currentPage,
+  ] = useGetPeopleWithPagination()
   const [
     { homeWorlds: homeWorldsData, loading: homeWorldsLoading, error: homeWorldsError },
     getHomeWorlds,
   ] = useGetHomeWorlds()
 
   useEffect(() => {
-    const getPeopleAndHomeworlds = async () => {
-      const data = await getPeople()
-      getHomeWorlds(data?.results)
-    }
-    getPeopleAndHomeworlds()
+    getPeople()
   }, [])
+
+  useEffect(() => {
+    getHomeWorlds(peopleData)
+  }, [peopleData])
+
+  const ListItem = ({ item }) => (
+    <TouchableOpacity
+      key={item?.name}
+      onPress={() =>
+        navigation.navigate('CharacterDetail', {
+          item,
+        })
+      }
+      style={styles.cardContainer}>
+      <View style={styles.avatarContainer}>
+        <StarWarsAvatar
+          hairColor={item?.hair_color}
+          gender={item?.gender}
+          skinColor={item?.skinColor}
+          size={200}
+        />
+      </View>
+      <View style={styles.descriptionContainer}>
+        <Text style={styles.title}>Name: {item?.name}</Text>
+        {!!homeWorldsData[item?.homeworld] && (
+          <Text style={styles.subtitle}>Planet: {homeWorldsData[item?.homeworld]}</Text>
+        )}
+      </View>
+    </TouchableOpacity>
+  )
+
+  const PaginationButtons = () => (
+    <View style={styles.paginationContainer}>
+      <View style={styles.paginationButtonContainer}>
+        <Button
+          disabled={!hasPreviousPage}
+          onPress={previousPage}
+          title='Previous'
+          buttonStyle={{ marginRight: 20 }}
+        />
+        <Button disabled={!hasNextPage} onPress={nextPage} title='Next' />
+      </View>
+      <Text style={styles.title}>Page: {currentPage}</Text>
+    </View>
+  )
 
   const CharacterList = () => (
     <FlatList
@@ -40,29 +89,8 @@ const Home = () => {
       data={peopleData}
       keyExtractor={(item) => item?.name}
       showsVerticalScrollIndicator={false}
-      renderItem={({ item }) => (
-        <TouchableOpacity
-          key={item?.name}
-          onPress={() =>
-            navigation.navigate('CharacterDetail', {
-              item,
-            })
-          }
-          style={styles.cardContainer}>
-          <View style={styles.avatarContainer}>
-            <StarWarsAvatar
-              hairColor={item?.hair_color}
-              gender={item?.gender}
-              skinColor={item?.skinColor}
-              size={200}
-            />
-          </View>
-          <View style={styles.descriptionContainer}>
-            <Text style={styles.title}>Name: {item?.name}</Text>
-            <Text style={styles.subtitle}>Planet: {homeWorldsData[item?.homeworld]}</Text>
-          </View>
-        </TouchableOpacity>
-      )}
+      ListFooterComponent={PaginationButtons}
+      renderItem={({ item }) => <ListItem item={item} />}
     />
   )
 
