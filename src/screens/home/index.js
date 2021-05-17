@@ -59,9 +59,11 @@ const Home = () => {
         />
       </View>
       <View style={styles.descriptionContainer}>
-        <Text style={styles.title}>Name: {item?.name}</Text>
         {!!homeWorldsData[item?.homeworld] && (
-          <Text style={styles.subtitle}>Planet: {homeWorldsData[item?.homeworld]}</Text>
+          <>
+            <Text style={styles.title}>Name: {item?.name}</Text>
+            <Text style={styles.subtitle}>Planet: {homeWorldsData[item?.homeworld]}</Text>
+          </>
         )}
       </View>
     </TouchableOpacity>
@@ -82,15 +84,22 @@ const Home = () => {
     </View>
   )
 
+  const renderItem = ({ item }) => <ListItem item={item} />
+  const keyExtractor = (item) => item?.name
+  const getItemLayout = (data, index) => ({ length: 200, offset: 20 * index, index })
+
   const CharacterList = () => (
     <FlatList
+      data={peopleData}
       style={styles.flatListContainer}
       scrollEnabled={true}
-      data={peopleData}
-      keyExtractor={(item) => item?.name}
       showsVerticalScrollIndicator={false}
+      keyExtractor={keyExtractor}
       ListFooterComponent={PaginationButtons}
-      renderItem={({ item }) => <ListItem item={item} />}
+      renderItem={renderItem}
+      removeClippedSubviews
+      getItemLayout={getItemLayout}
+      windowSize={200}
     />
   )
 
@@ -100,7 +109,7 @@ const Home = () => {
         <ActivityIndicator animating color='#AD7D37' size='large' />
       )}
       {(peopleError || homeWorldsError) && <Error refetch={getPeople} />}
-      {!homeWorldsError && !homeWorldsLoading && !peopleLoading && !peopleError && CharacterList()}
+      {!homeWorldsLoading && !peopleLoading && CharacterList()}
     </SafeAreaView>
   )
 }

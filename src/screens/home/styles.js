@@ -19,15 +19,18 @@ const styles = StyleSheet.create({
     backgroundColor: '#A8C2C2',
     borderRadius: 10,
     marginBottom: 20,
+    minWidth: 200,
   },
   avatarContainer: {
     paddingTop: 10,
     paddingLeft: 50,
+    minHeight: 200,
   },
   descriptionContainer: {
     flex: 1,
     width: '100%',
     height: 40,
+    minHeight: 40,
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#FBE91A',
