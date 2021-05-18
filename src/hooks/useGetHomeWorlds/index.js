@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import axios from 'axios'
+import getWorld from '../../services/world'
 
 const useGetHomeWorlds = () => {
   const [homeWorlds, setHomeWorlds] = useState({})
@@ -12,7 +12,7 @@ const useGetHomeWorlds = () => {
       const uniqueHomeWorlds = Array.from(new Set(homeworlds))
       const homeWorldsData = await Promise.all(
         uniqueHomeWorlds.map(async (endpoint) => {
-          const { data } = await axios.get(endpoint)
+          const { data } = await getWorld(endpoint)
 
           return {
             [endpoint]: data?.name,
@@ -23,7 +23,10 @@ const useGetHomeWorlds = () => {
         acc[Object.keys(cur)[0]] = Object.values(cur)[0]
         return acc
       }, {})
-      setHomeWorlds({ ...reduced })
+
+      if (Object.keys(reduced).length > 0) {
+        setHomeWorlds({ ...reduced })
+      }
     } catch (e) {
       setError(true)
     } finally {
