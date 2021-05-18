@@ -1,4 +1,4 @@
-import React, { useLayoutEffect } from 'react'
+import React, { useEffect } from 'react'
 import { SafeAreaView, View, Text, Image } from 'react-native'
 import { useNavigation } from '@react-navigation/core'
 
@@ -6,11 +6,11 @@ import Darth from '../../assets/darth.png'
 import StarWarsAvatar from '../../components/StarWarsAvatar'
 import styles from './styles'
 
-const Home = ({ route }) => {
+const CharacterDetail = ({ route }) => {
   const params = route?.params
   const navigation = useNavigation()
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     navigation.setOptions({
       title: params?.item?.name,
     })
@@ -45,4 +45,4 @@ const Home = ({ route }) => {
   )
 }
 
-export default Home
+export default CharacterDetail
