@@ -6,10 +6,11 @@ import {
   ActivityIndicator,
   TouchableOpacity,
   FlatList,
+  Image,
 } from 'react-native'
 import { useNavigation } from '@react-navigation/core'
 
-import StarWarsAvatar from '../../components/StarWarsAvatar'
+import Logo from '../../assets/logo.png'
 import Button from '../../components/Button'
 import Error from '../../components/Error'
 import useGetPeopleWithPagination from '../../hooks/useGetPeopleWithPagination'
@@ -49,12 +50,9 @@ const Home = () => {
       onPress={() => handleOnPress(item)}
       style={styles.cardContainer}>
       <View style={styles.avatarContainer}>
-        <StarWarsAvatar
-          hairColor={item?.hair_color}
-          gender={item?.gender}
-          skinColor={item?.skinColor}
-          size={200}
-        />
+        {!!homeWorldsData[item?.homeworld] && (
+          <Image style={styles.logo} resizeMode='contain' source={Logo} />
+        )}
       </View>
       <View style={styles.descriptionContainer}>
         {!!homeWorldsData[item?.homeworld] && (
@@ -80,7 +78,7 @@ const Home = () => {
             />
             <Button disabled={!hasNextPage} onPress={nextPage} title='Next' />
           </View>
-          <Text style={styles.title}>Page: {currentPage}</Text>
+          <Text style={[styles.title, styles.withMargin]}>Page: {currentPage}</Text>
         </View>
       )}
     </>
@@ -88,7 +86,6 @@ const Home = () => {
 
   const renderItem = ({ item }) => <ListItem item={item} />
   const keyExtractor = (item) => item?.name
-  const getItemLayout = (_, index) => ({ length: 200, offset: 200 * index, index })
 
   const CharacterList = () => (
     <FlatList
@@ -98,10 +95,7 @@ const Home = () => {
       keyExtractor={keyExtractor}
       ListFooterComponent={PaginationButtons}
       renderItem={renderItem}
-      getItemLayout={getItemLayout}
-      removeClippedSubviews
       scrollEnabled
-      windowSize={200}
     />
   )
 

@@ -22,10 +22,9 @@ const styles = StyleSheet.create({
     minWidth: 200,
   },
   avatarContainer: {
-    paddingTop: 10,
-    paddingLeft: 50,
     minHeight: 200,
   },
+  logo: { width: 200, height: 200 },
   descriptionContainer: {
     flex: 1,
     width: '100%',
@@ -40,6 +39,9 @@ const styles = StyleSheet.create({
   title: {
     fontWeight: 'bold',
     fontSize: 16,
+  },
+  withMargin: {
+    marginBottom: 10,
   },
   subtitle: {
     fontSize: 14,
