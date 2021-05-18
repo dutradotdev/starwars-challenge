@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import axios from 'axios'
+import getCharacter from '../../services/character'
 import orderByField from '../../utils/orderByField'
 
 const useGetPeopleWithPagination = () => {
@@ -18,7 +18,7 @@ const useGetPeopleWithPagination = () => {
     try {
       setLoading(true)
 
-      const { data } = await axios.get(`http://swapi.dev/api/people/?page=${currentPage}`)
+      const { data } = await getCharacter(currentPage)
       setHasNextPage(!!data?.next)
       setHasPreviousPage(!!data?.previous)
 
